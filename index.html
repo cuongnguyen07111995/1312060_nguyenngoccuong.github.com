@@ -36,8 +36,7 @@ function initCanvas(){
 
   function paintFrame(){
   	var v = document.getElementById("video1");
-  	w = v.width;h = v.height;
-   ctx1.drawImage(v, 5, 5, 260, 125);
+    ctx1.drawImage(v, 5, 5, 260, 125);
     var apx = ctx1.getImageData(0, 0, 265, 130);
     var data = apx.data;
  
@@ -47,9 +46,9 @@ function initCanvas(){
             g = data[i+1],
             b = data[i+2],
             gray = (r+b+g)/3;
-        data[i] = gray;
-        data[i+1] = gray;
-        data[i+2] = gray;
+        data[i] = 255-r;
+        data[i+1] = 255-g;
+        data[i+2] = 255-b;
     }
     apx.data = data;
     ctx1.putImageData(apx, 0, 0);
