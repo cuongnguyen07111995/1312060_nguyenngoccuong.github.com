@@ -1,35 +1,92 @@
 <html>
-<head></head>
+<head>
+</head>
 <body>
 
 <p>Video to use:</p>
 <video id="video1" controls width="270" autoplay>
-  <source src="Phải chăng đây là cô gái đến từ tương lai -.mp4" type='video/mp4'>
-  <source src="Phải chăng đây là cô gái đến từ tương lai -.ogg" type='video/ogg'>
-  <source src="Phải chăng đây là cô gái đến từ tương lai -.webm" type='video/webm'>
+  <source src="video.mp4" type='video/mp4'>
+  <source src="video.ogg" type='video/ogg'>
+  <source src="video.webm" type='video/webm'>
 </video>
-
-<p>Canvas (the code draws the current frame of the video every 20 millisecond):</p>
-<canvas id="myCanvas" width="270" height="135" style="border:1px solid #d3d3d3;">
-Your browser does not support the HTML5 canvas tag.</canvas>
-
+<p>CANVAS  VIDEOS:</p>
+<canvas id="myCanvas" width="270" height="135" style="border:1px solid #d3d3d3;"></canvas>
+<canvas id="myCanvas1" width="270" height="135" style="border:1px solid #d3d3d3;"></canvas>
 <script>
+ window.onload = function(){
+        initCanvas1();
+        initCanvas();
+    };
+function initCanvas1(){
+        var v1 = document.getElementById("video1");
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+        var i;
+        v1.addEventListener("play", function() {i = window.setInterval(function() {ctx.drawImage(v1,5,5,260,125)},20);}, false);
+        v1.addEventListener("pause", function() {window.clearInterval(i);}, false);
+        v1.addEventListener("ended", function() {clearInterval(i);}, false); 
+};
+var ctx1 ;
+function initCanvas(){
+   var v = document.getElementById("video1");
+     var c1 = document.getElementById("myCanvas1");
+     ctx1 = c1.getContext("2d");
+    v.addEventListener("timeupdate",paintFrame,false)
+};
 
-var v = document.getElementById("video1");
-var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
-var i;
-
-v.addEventListener("play", function() {i = window.setInterval(function() {ctx.drawImage(v,5,5,260,125)},20);}, false);
-v.addEventListener("pause", function() {window.clearInterval(i);}, false);
-v.addEventListener("ended", function() {clearInterval(i);}, false); 
+  function paintFrame(){
+  	var v = document.getElementById("video1");
+  	w = v.width;h = v.height;
+   ctx1.drawImage(v, 5, 5, 260, 125);
+    var apx = ctx1.getImageData(0, 0, 265, 130);
+    var data = apx.data;
  
+    for(var i = 0; i < data.length; i+=4)
+    {
+        var r = data[i],
+            g = data[i+1],
+            b = data[i+2],
+            gray = (r+b+g)/3;
+        data[i] = 255-r;
+        data[i+1] = 255-g;
+        data[i+2] = 255-b;
+    }
+    apx.data = data;
+    ctx1.putImageData(apx, 0, 0);
+ 
+    if (v.paused || v.ended) {
+      return;
+    }
+    setTimeout(function() {
+        paintFrame();
+    }, 0);
+  };
+  function invertColor(img){
+        var canvas = document.getElementById("mycanvas2");
+        var context = canvas.getContext("2d");
+ 
+        // draw image at top-left corner
+        context.drawImage(img,0,0);
+        // draw original image right beside the previous image
+        context.drawImage(img,img.width,0);
+ 
+        // get ImageData object from the left image
+        var imageData = context.getImageData(0, 0, img.width, img.height);
+        var data = imageData.data;
+ 
+        for (var i = 0; i < data.length; i += 4) {
+ 
+            data[i]     =   255 - data[i]; // red
+            data[i + 1] =   255 - data[i+1]; // green
+            data[i + 2] =   255 - data[i+2]; // blue
+            data[i + 3] =   255; // alpha
+        }
+ 
+        context.putImageData(imageData,0,0);
+    };
 </script>
-
 <p><strong>Note:</strong> The canvas tag is not supported in Internet 
 Explorer 8 and earlier versions.</p>
 
 </body>
-
-
 </html>
