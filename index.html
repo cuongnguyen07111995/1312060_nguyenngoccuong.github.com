@@ -47,9 +47,9 @@ function initCanvas(){
             g = data[i+1],
             b = data[i+2],
             gray = (r+b+g)/3;
-        data[i] = 255-r;
-        data[i+1] = 255-g;
-        data[i+2] = 255-b;
+        data[i] = gray;
+        data[i+1] = gray;
+        data[i+2] = gray;
     }
     apx.data = data;
     ctx1.putImageData(apx, 0, 0);
